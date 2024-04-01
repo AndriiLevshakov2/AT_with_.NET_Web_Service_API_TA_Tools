@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core
 {
@@ -11,8 +6,10 @@ namespace Core
     {
         private static AppConfiguration? _appConfiguration { get; set; }
         public static string BaseUrl => _appConfiguration.BaseUrl;
+        public static string RequestBody => _appConfiguration.RequestBody;
+        public static string InvalidEndpoint => _appConfiguration.InvalidEndpoint;
 
-        public ConfigurationManager() 
+        public ConfigurationManager()
         {
             _appConfiguration = GetConfiguration();
         }
