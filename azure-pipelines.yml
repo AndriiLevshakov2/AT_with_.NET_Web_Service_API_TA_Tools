@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - '*'
+schedules:
+  - cron: "0 0 * * *"
+  - cron: "0 12 * * *"
+
+stages:
+- stage: API_Tests
+  jobs:
+  - job: API_Testing
+    steps:
+    - script: # Commands to run API tests
+
+- stage: UI_Tests
+  jobs:
+  - job: UI_Testing
+    steps:
+    - script: # Commands to run UI tests
+      displayName: Run UI tests
+    - task: PublishTestResults@2 # Publish test results
+    - task: PublishBuildArtifacts@1 # Publish screenshots as artifacts
+      displayName: Publish Screenshots
+
+- stage: Manual
+  jobs:
+  - job: Manual_Trigger
+    steps:
+    - script: |
+        # Prompt the user to select a browser
+        $browser = Read-Host "Enter the browser (e.g., chrome, firefox):"
+        echo "Selected browser: $browser"
+      displayName: 'Select Browser for UI Tests'
+    - script: |
+        # Commands to run both API and UI tests
+      displayName: 'Run API and UI tests'
+    - task: PublishTestResults@2
+      displayName: 'Publish test results'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish screenshots as artifacts'
