@@ -1,11 +1,33 @@
+pool:
+  vmImage: "windows-latest"
+
+trigger:
+  branches:
+    include:
+      - AzureDevOpsHomeTask
+
+schedules:
+  - cron: '0 9 * * *'
+    displayName: Daily morning build
+    branches:
+      include:
+        - AzureDevOpsHomeTask
+
+pr:
+ branches:
+   include:
+     - AzureDevOpsHomeTask
+
 stages:
 - stage: API_Tests
+  condition: eq(variables['Build.Reason'], 'Manual')
   jobs:
   - job: API_Testing
     steps:
     - script: # Commands to run API tests
 
 - stage: UI_Tests
+  condition: eq(variables['Build.Reason'], 'Manual')
   jobs:
   - job: UI_Testing
     steps:
@@ -15,13 +37,6 @@ stages:
     - task: PublishBuildArtifacts@1 # Publish screenshots as artifacts
       displayName: Publish Screenshots
 
-- stage: Manual
-  jobs:
-  - job: Manual_Trigger
-    steps:
-    - task: PublishBuildArtifacts@1
-    - script: # Commands to run both API and UI tests
-      displayName: Run API and UI tests
 
     # Even if API tests fail, UI tests will still run because they are in a separate stage
     - task: PublishTestResults@2 # Publish test results
